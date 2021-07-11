@@ -400,6 +400,7 @@ std::vector<Field> CSmartPlaylistRule::GetFields(const std::string &type)
     fields.push_back(FieldVotes);
     fields.push_back(FieldRating);
     fields.push_back(FieldUserRating);
+	fields.push_back(FieldCountry);
     fields.push_back(FieldYear);
     fields.push_back(FieldGenre);
     fields.push_back(FieldDirector);
@@ -431,6 +432,7 @@ std::vector<Field> CSmartPlaylistRule::GetFields(const std::string &type)
     fields.push_back(FieldLastPlayed);
     fields.push_back(FieldInProgress);
     fields.push_back(FieldGenre);
+	fields.push_back(FieldCountry);
     fields.push_back(FieldYear); // premiered
     fields.push_back(FieldDirector);
     fields.push_back(FieldActor);
@@ -484,6 +486,7 @@ std::vector<Field> CSmartPlaylistRule::GetFields(const std::string &type)
     fields.push_back(FieldArtist);
     fields.push_back(FieldFilename);
     fields.push_back(FieldPath);
+	fields.push_back(FieldCountry);
     fields.push_back(FieldPlaycount);
     fields.push_back(FieldLastPlayed);
     fields.push_back(FieldRating);
@@ -585,7 +588,8 @@ std::vector<SortBy> CSmartPlaylistRule::GetOrders(const std::string &type)
     orders.push_back(SortByVotes);
     orders.push_back(SortByRating);
     orders.push_back(SortByUserRating);
-    orders.push_back(SortByYear);
+    orders.push_back(SortByCountry);
+	orders.push_back(SortByYear);
     orders.push_back(SortByGenre);
     orders.push_back(SortByNumberOfEpisodes);
     orders.push_back(SortByNumberOfWatchedEpisodes);
@@ -606,6 +610,7 @@ std::vector<SortBy> CSmartPlaylistRule::GetOrders(const std::string &type)
     orders.push_back(SortByTime);
     orders.push_back(SortByPlaycount);
     orders.push_back(SortByLastPlayed);
+	orders.push_back(SortByCountry);
     orders.push_back(SortByYear); // premiered/dateaired
     orders.push_back(SortByEpisodeNumber);
     orders.push_back(SortBySeason);
@@ -690,6 +695,7 @@ std::vector<Field> CSmartPlaylistRule::GetGroups(const std::string &type)
     groups.push_back(FieldActor);
     groups.push_back(FieldDirector);
     groups.push_back(FieldStudio);
+	groups.push_back(FieldCountry);
     groups.push_back(FieldTag);
   }
   else if (type == "musicvideos")
@@ -700,6 +706,7 @@ std::vector<Field> CSmartPlaylistRule::GetGroups(const std::string &type)
     groups.push_back(FieldYear);
     groups.push_back(FieldDirector);
     groups.push_back(FieldStudio);
+	groups.push_back(FieldCountry);
     groups.push_back(FieldTag);
   }
 
@@ -978,8 +985,10 @@ std::string CSmartPlaylistRule::FormatWhereClause(const std::string &negate, con
       query = negate + FormatLinkQuery("genre", "genre", MediaTypeMusicVideo, GetField(FieldId, strType), parameter);
     else if (m_field == FieldArtist || m_field == FieldAlbumArtist)
       query = negate + FormatLinkQuery("actor", "actor", MediaTypeMusicVideo, GetField(FieldId, strType), parameter);
-    else if (m_field == FieldStudio)
+    else if (m_field == FieldStudio)		
       query = negate + FormatLinkQuery("studio", "studio", MediaTypeMusicVideo, GetField(FieldId, strType), parameter);
+    else if (m_field == FieldCountry)
+      query = negate + FormatLinkQuery("country", "country", MediaTypeMusicVideo, GetField(FieldId, strType), parameter);
     else if (m_field == FieldDirector)
       query = negate + FormatLinkQuery("director", "actor", MediaTypeMusicVideo, GetField(FieldId, strType), parameter);
     else if ((m_field == FieldLastPlayed || m_field == FieldDateAdded) && (m_operator == OPERATOR_LESS_THAN || m_operator == OPERATOR_BEFORE || m_operator == OPERATOR_NOT_IN_THE_LAST))
@@ -999,6 +1008,8 @@ std::string CSmartPlaylistRule::FormatWhereClause(const std::string &negate, con
       query = negate + FormatLinkQuery("actor", "actor", MediaTypeTvShow, GetField(FieldId, strType), parameter);
     else if (m_field == FieldStudio)
       query = negate + FormatLinkQuery("studio", "studio", MediaTypeTvShow, GetField(FieldId, strType), parameter);
+    else if (m_field == FieldCountry)
+      query = negate + FormatLinkQuery("country", "country", MediaTypeTvShow, GetField(FieldId, strType), parameter);
     else if (m_field == FieldMPAA)
       query = negate + " (" + GetField(m_field, strType) + parameter + ")";
     else if ((m_field == FieldLastPlayed || m_field == FieldDateAdded) && (m_operator == OPERATOR_LESS_THAN || m_operator == OPERATOR_BEFORE || m_operator == OPERATOR_NOT_IN_THE_LAST))
@@ -1025,8 +1036,10 @@ std::string CSmartPlaylistRule::FormatWhereClause(const std::string &negate, con
     else if ((m_field == FieldLastPlayed || m_field == FieldDateAdded) && (m_operator == OPERATOR_LESS_THAN || m_operator == OPERATOR_BEFORE || m_operator == OPERATOR_NOT_IN_THE_LAST))
       query = GetField(m_field, strType) + " IS NULL OR " + GetField(m_field, strType) + parameter;
     else if (m_field == FieldStudio)
-      query = negate + FormatLinkQuery("studio", "studio", MediaTypeTvShow, (table + ".idShow").c_str(), parameter);
-    else if (m_field == FieldMPAA)
+      query = negate + FormatLinkQuery("studio", "studio", MediaTypeTvShow, (table + ".idShow").c_str(), parameter);     
+	else if (m_field == FieldCountry)
+      query = negate + FormatLinkQuery("country", "country", MediaTypeTvShow, GetField(FieldId, strType), parameter);
+	else if (m_field == FieldMPAA)
       query = negate + " (" + GetField(m_field, strType) +  parameter + ")";
   }
   if (m_field == FieldVideoResolution)
